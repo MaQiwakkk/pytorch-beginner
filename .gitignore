@@ -3,3 +3,8 @@ data
 *.pth
 __pycache__
 .vscode
+.DS_Store
+.idea/
+data/
+torchvision_dataset/
+logs_*/
