@@ -20,13 +20,12 @@ log_dir = './logs_simple_ae'
 if not os.path.exists(img_dir):
     os.makedirs(img_dir, exist_ok=True)
 
-# 3. 数据处理流水线 (加工器)
+# 3. 数据处理流水线 (加工器)归一化和标准化
 img_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize([0.5], [0.5])  # 映射到 [-1, 1]
 ])
 
-# 注意：使用你挪到根目录后的路径
 dataset = datasets.MNIST(root='../data', train=True, transform=img_transform, download=True)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
@@ -43,7 +42,7 @@ class SimpleAutoEncoder(nn.Module):
             nn.ReLU(True),
             nn.Linear(64, 12),
             nn.ReLU(True),
-            nn.Linear(12, 3)  # 最终压缩到 3 个特征点
+            nn.Linear(12, 3)  # 最终压缩到 3 个特征点的embedding
         )
         # Decoder: 3 -> 12 -> 64 -> 128 -> 784
         self.decoder = nn.Sequential(
@@ -54,6 +53,7 @@ class SimpleAutoEncoder(nn.Module):
             nn.Linear(64, 128),
             nn.ReLU(True),
             nn.Linear(128, 28 * 28),
+            #nn.ReLU(True),测试，将最后的激活函数Tanh改为ReLU，生成的图片('./mlp_img1')很糟糕
             nn.Tanh()  # 对应 Normalize 的 [-1, 1]
         )
 

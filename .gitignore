@@ -8,4 +8,4 @@ __pycache__
 data/
 torchvision_dataset/
 logs_*/
-*_img/
+*img*/
