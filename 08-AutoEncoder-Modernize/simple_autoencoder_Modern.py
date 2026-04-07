@@ -20,7 +20,7 @@ log_dir = './logs_simple_ae'
 if not os.path.exists(img_dir):
     os.makedirs(img_dir, exist_ok=True)
 
-# 3. 数据处理流水线 (加工器)归一化和标准化
+# 3. 数据处理流水线 ，归一化和标准化
 img_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize([0.5], [0.5])  # 映射到 [-1, 1]
@@ -53,7 +53,7 @@ class SimpleAutoEncoder(nn.Module):
             nn.Linear(64, 128),
             nn.ReLU(True),
             nn.Linear(128, 28 * 28),
-            #nn.ReLU(True),测试，将最后的激活函数Tanh改为ReLU，生成的图片('./mlp_img1')很糟糕
+            #nn.ReLU(True),测试，将最后的激活函数Tanh改为ReLU，生成的图片('./mlp_img_test')很糟糕
             nn.Tanh()  # 对应 Normalize 的 [-1, 1]
         )
 
