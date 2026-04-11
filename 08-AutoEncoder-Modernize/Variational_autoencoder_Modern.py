@@ -7,7 +7,7 @@ from torchvision import transforms, datasets
 from torchvision.utils import save_image
 import os
 
-# 1. 现代化设备配置
+# 1. 设备配置
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
 if not os.path.exists('./vae_img'):
@@ -56,7 +56,7 @@ class VAE(nn.Module):
 
     def decode(self, z):
         h3 = F.relu(self.fc3(z))
-        return torch.sigmoid(self.fc4(h3))
+        return torch.sigmoid(self.fc4(h3))  # sigmoid输出是（0，1）
 
     def forward(self, x):
         mu, logvar = self.encode(x)
@@ -66,9 +66,8 @@ class VAE(nn.Module):
 
 model = VAE().to(device)
 
-# 3. 损失函数现代化
-# 注意：size_average=False 在新版本中写作 reduction='sum'
-mse_criterion = nn.MSELoss(reduction='sum')
+# 3. 损失函数 BCE + KLD
+mse_criterion = nn.MSELoss(reduction='sum')  # 不求平均，否则，KL 散度会完全掩盖掉重建误差
 
 
 def loss_function(recon_x, x, mu, logvar):
